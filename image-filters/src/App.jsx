@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import Slider from "./Slider";
 import DisplayImage from "./DisplayImage";
 
+/**
+ * Renders an image filter UI and manages filter values for the displayed image.
+ *
+ * The component maintains blur, brightness, contrast, saturate, and sepia values,
+ * applies them to DisplayImage via a CSS filter string, and provides Slider controls to update them.
+ *
+ * @returns {JSX.Element} The rendered application UI containing a heading, DisplayImage, and Slider controls.
+ */
 export default function App() {
   const [filters, setFilters] = useState({
     blur: 0,
