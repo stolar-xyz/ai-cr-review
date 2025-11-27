@@ -1,0 +1,21 @@
+{
+  "name": "nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "reset:db": "sqlite3 notes.db < seed.sql"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "doodle.css": "^0.0.2",
+    "next": "15.1.6",
+    "promised-sqlite3": "^2.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sqlite3": "^5.1.7"
+  }
+}
