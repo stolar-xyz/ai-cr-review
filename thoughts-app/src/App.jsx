@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function App() {
   const [thoughts, setThoughts] = useState([]);
   const [thought, setThought] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [error, setError] = useState(null);
-  const nextIdRef = useRef(0);
 
   const createThoughtWithId = useCallback((text) => {
     return {
-      id: nextIdRef.current++,
+      id: crypto.randomUUID(),
       text,
     };
   }, []);
@@ -30,8 +29,14 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.error || "Failed to post thought");
+        let errorMessage = "Failed to post thought";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // Server returned non-JSON error response
+        }
+        setError(errorMessage);
         setThought(currentThought);
         return;
       }
