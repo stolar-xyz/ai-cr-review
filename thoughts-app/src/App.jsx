@@ -1,12 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function App() {
   const [thoughts, setThoughts] = useState([]);
   const [thought, setThought] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [error, setError] = useState(null);
+  const nextIdRef = useRef(0);
+  const thoughtsWithIdsRef = useRef(new Map());
 
-  async function postDeepThought() {
+  const getThoughtWithId = useCallback((text) => {
+    if (!thoughtsWithIdsRef.current.has(text)) {
+      thoughtsWithIdsRef.current.set(text, nextIdRef.current++);
+    }
+    return {
+      id: thoughtsWithIdsRef.current.get(text),
+      text,
+    };
+  }, []);
+
+  const postDeepThought = useCallback(async () => {
     const currentThought = thought;
     setThought("");
     setError(null);
@@ -29,7 +41,7 @@ export default function App() {
       }
 
       const { thoughts: newThoughts } = await response.json();
-      setThoughts(newThoughts);
+      setThoughts(newThoughts.map(getThoughtWithId));
     } catch (err) {
       setError("Network error. Please try again.");
       setThought(currentThought);
@@ -37,7 +49,7 @@ export default function App() {
     } finally {
       setIsPosting(false);
     }
-  }
+  }, [thought, getThoughtWithId]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -45,7 +57,7 @@ export default function App() {
     fetch("/thoughts", { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        setThoughts(data);
+        setThoughts(data.map(getThoughtWithId));
       })
       .catch((err) => {
         if (err.name !== "AbortError") {
@@ -55,14 +67,14 @@ export default function App() {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [getThoughtWithId]);
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
       postDeepThought();
     },
-    [thought]
+    [postDeepThought]
   );
 
   return (
@@ -86,7 +98,7 @@ export default function App() {
       </form>
       <ul>
         {thoughts.length > 0 ? (
-          thoughts.map((t) => <li key={t}>{t}</li>)
+          thoughts.map((t) => <li key={t.id}>{t.text}</li>)
         ) : (
           <li>No thoughts yet. Share your first deep thought!</li>
         )}
