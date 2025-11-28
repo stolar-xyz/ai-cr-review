@@ -154,3 +154,27 @@ textarea:focus {
   outline: none;
   border-color: #00ff04;
 }
+
+.error {
+  background-color: #ff4444;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #666;
+}
+
+textarea:disabled {
+  background-color: #333;
+  cursor: not-allowed;
+}
