@@ -2,7 +2,7 @@ export default function Slider({ value, deferred, onChange, name, max }) {
   const sliderConfig = { min: 0, max: max };
 
   return (
-    <li className="slider">
+    <li className="slider1">
       <label htmlFor={name}>
         {name}
         {value !== deferred ? " (Updating)" : ""}
