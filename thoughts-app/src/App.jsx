@@ -6,14 +6,10 @@ export default function App() {
   const [isPosting, setIsPosting] = useState(false);
   const [error, setError] = useState(null);
   const nextIdRef = useRef(0);
-  const thoughtsWithIdsRef = useRef(new Map());
 
-  const getThoughtWithId = useCallback((text) => {
-    if (!thoughtsWithIdsRef.current.has(text)) {
-      thoughtsWithIdsRef.current.set(text, nextIdRef.current++);
-    }
+  const createThoughtWithId = useCallback((text) => {
     return {
-      id: thoughtsWithIdsRef.current.get(text),
+      id: nextIdRef.current++,
       text,
     };
   }, []);
@@ -41,7 +37,7 @@ export default function App() {
       }
 
       const { thoughts: newThoughts } = await response.json();
-      setThoughts(newThoughts.map(getThoughtWithId));
+      setThoughts(newThoughts.map(createThoughtWithId));
     } catch (err) {
       setError("Network error. Please try again.");
       setThought(currentThought);
@@ -49,15 +45,20 @@ export default function App() {
     } finally {
       setIsPosting(false);
     }
-  }, [thought, getThoughtWithId]);
+  }, [thought, createThoughtWithId]);
 
   useEffect(() => {
     const controller = new AbortController();
 
     fetch("/thoughts", { signal: controller.signal })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load thoughts");
+        }
+        return res.json();
+      })
       .then((data) => {
-        setThoughts(data.map(getThoughtWithId));
+        setThoughts(data.map(createThoughtWithId));
       })
       .catch((err) => {
         if (err.name !== "AbortError") {
@@ -67,7 +68,7 @@ export default function App() {
       });
 
     return () => controller.abort();
-  }, [getThoughtWithId]);
+  }, [createThoughtWithId]);
 
   const handleSubmit = useCallback(
     (e) => {
