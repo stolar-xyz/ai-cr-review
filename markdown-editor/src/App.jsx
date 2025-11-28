@@ -17,7 +17,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Track render count using ref to avoid infinite loop
   renderCount.current += 1;
 
   const render = useCallback((text) => marked.parse(text), []);

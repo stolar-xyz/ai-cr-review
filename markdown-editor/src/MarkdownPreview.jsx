@@ -6,7 +6,6 @@ export default function MarkdownPreview({ render, options }) {
     theme: options.theme
   };
 
-  // Sanitize the HTML output to prevent XSS attacks
   const sanitizedHtml = DOMPurify.sanitize(render(options.text));
 
   return (
