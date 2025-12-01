@@ -510,10 +510,11 @@ uwagi do swoich komentarzy, działaj według tego flow:
    - Przykład: "Nie sugeruj TypeScript w tym projekcie - świadoma decyzja zespołu
      trzymać się JS"
 
-### 3. **NIE otwieraj pustych PR**
-   - Jeśli jedyna akcja to "nie robić czegoś" = zaktualizuj TYLKO te instrukcje
-   - Nie twórz PR z samymi zmianami w `.github/copilot-instructions.md`
-   - Pusty PR (bez zmian w kodzie produkcyjnym) = marnowanie czasu reviewera
+### 3. **ZAWSZE otwieraj PR z aktualizacją instrukcji**
+   - Jeśli jedyna akcja to "nie robić czegoś" = zaktualizuj te instrukcje i **otwórz PR**
+   - PR z samymi zmianami w `.github/copilot-instructions.md` jest **wartościowy**
+   - Taki PR to inwestycja: ulepsza przyszłe review i redukuje powtarzające się uwagi
+   - Tytuł PR: `chore: aktualizuj instrukcje Copilot - [konkretna zmiana]`
 
 ### 4. **Proaktywna aktualizacja instrukcji**
    - Każda uwaga od właściciela projektu = trwała zmiana w instrukcjach
