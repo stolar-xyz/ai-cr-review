@@ -200,7 +200,7 @@ useEffect(() => {
 ```
 
 **Memory leaks:**
-- Timers bez cleanup: `setInterval`, `setTimeout`
+- **NIE komentuj** braku cleanup dla `setInterval` - zespół świadomie akceptuje ten pattern
 - Event listeners bez cleanup: `addEventListener`
 - Subskrypcje bez cleanup
 
@@ -490,6 +490,21 @@ brak sposobu weryfikacji.
 ```
 **Dlaczego źle:** Jeśli nie masz pewności (nie widziałeś Profilera), napisz
 "Niepewne, do weryfikacji" i opisz jak sprawdzić.
+
+### ❌ Zły 6: Komentarz o setInterval bez cleanup
+```
+[SEVERITY: high] [PERF] Memory leak - setInterval bez cleanup function
+
+Miejsce: App.jsx → useEffect (linie 14-18)
+
+Dlaczego: Timer uruchamiany przez setInterval działa i nigdy nie jest zatrzymywany.
+useEffect nie zwraca cleanup function, więc interval będzie działać nawet po
+odmontowaniu komponentu.
+
+Propozycja: return () => clearInterval(interval);
+```
+**Dlaczego źle:** Zespół explicite poprosił o niekomentowanie braku cleanup dla
+setInterval. Jest to świadoma decyzja architektoniczna projektu.
 
 ---
 
