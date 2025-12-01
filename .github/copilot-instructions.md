@@ -167,14 +167,25 @@ STATIC_CONFIG.map((item, i) => <Item key={i} {...item} />)
 - Ale: to dodaje zależność, sprawdź czy problem rzeczywiście istnieje
 
 #### 1.4 Effects
-**Dependency arrays:**
-```jsx
-// ❌ ZŁE - brakujące zależności
-useEffect(() => {
-  console.log(filters); // 'filters' jest używane, ale nie w deps
-}, []);
 
-// ✅ DOBRE
+**WAŻNE - nie komentuj pustych tablic w useEffect:**
+- **NIE sugeruj** zmian do pustych dependency arrays `[]`
+- Pusta tablica w useEffect to świadoma decyzja developera (mount-only effect)
+- Team explicite poprosił o niekomentowanie tego przypadku
+
+**Dependency arrays (komentuj tylko gdy brak tablicy w ogóle):**
+```jsx
+// ⚠️ BEZ TABLICY - można skomentować (effect na każdym renderze)
+useEffect(() => {
+  console.log(filters);
+}); // <-- brak dependency array
+
+// ✅ OK - pusta tablica = mount only, NIE KOMENTUJ
+useEffect(() => {
+  console.log(filters);
+}, []); // Świadoma decyzja, nie sugeruj zmian
+
+// ✅ DOBRE - z właściwymi zależnościami
 useEffect(() => {
   console.log(filters);
 }, [filters]);
@@ -408,32 +419,32 @@ Weryfikacja: React DevTools Profiler → Record → przesuń slider → sprawdź
 razy Slider się re-renderował. Powinien być 1, a jest 5+.
 ```
 
-### Przykład 3: useEffect z Pustymi Deps
+### Przykład 3: useEffect bez cleanup (memory leak)
 ```
-[SEVERITY: medium] [BUG] useEffect z dependency array nie obejmuje użytych wartości
+[SEVERITY: medium] [BUG] useEffect bez cleanup - memory leak przy odmontowaniu
 
-Miejsce: src/DisplayImage.jsx → useEffect (linie 15-17)
+Miejsce: src/Chat.jsx → useEffect (linie 15-20)
 
-Dlaczego: useEffect używa `filterStyle`, ale dependency array jest puste [].
-To znaczy, że effect uruchomi się tylko raz (mount), a potem nigdy - nawet
-gdy filterStyle się zmieni. Console.log pokaże tylko pierwszy render.
+Dlaczego: useEffect tworzy event listener (window.addEventListener), ale nie
+zwraca funkcji cleanup. Gdy komponent się odmontuje, listener nadal będzie
+nasłuchiwał, co powoduje memory leak i potencjalne błędy.
 
 Propozycja:
 \`\`\`jsx
 useEffect(() => {
-  console.log("Filter changed:", filterStyle);
-}, [filterStyle]); // Dodaj filterStyle do deps
-```
-
-Trade-off / kiedy nie: Jeśli celowo chcesz tylko mount effect, dodaj komentarz:
-\`\`\`jsx
-useEffect(() => {
-  // Intentionally run only on mount
-  console.log("Initial filter:", filterStyle);
-}, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const handleResize = () => setWidth(window.innerWidth);
+  window.addEventListener('resize', handleResize);
+  
+  // Cleanup - usuwamy listener przy odmontowaniu
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 \`\`\`
 
-Weryfikacja: Zmień slider → console.log powinien się pojawić. Teraz nie pojawia się.
+Trade-off / kiedy nie: Jeśli to jest główny komponent aplikacji (App), który
+nigdy się nie odmontowuje, cleanup jest mniej krytyczny (ale nadal dobra praktyka).
+
+Weryfikacja: Zamontuj/odmontuj komponent kilka razy, sprawdź w DevTools Memory
+czy ilość listenerów nie rośnie.
 ```
 
 ### Przykład 4: Pozytywny Feedback
@@ -490,6 +501,18 @@ brak sposobu weryfikacji.
 ```
 **Dlaczego źle:** Jeśli nie masz pewności (nie widziałeś Profilera), napisz
 "Niepewne, do weryfikacji" i opisz jak sprawdzić.
+
+### ❌ Zły 6: Komentarz o pustej tablicy w useEffect
+```
+[SEVERITY: medium] [BUG] useEffect z pustą tablicą nie reaguje na zmiany
+
+useEffect(() => {
+  console.log(filterStyle);
+}, []); // Dodaj filterStyle do deps
+```
+**Dlaczego źle:** Pusta tablica dependency `[]` w useEffect to świadoma decyzja
+developera - mount-only effect. Team explicite poprosił o niekomentowanie tego
+przypadku. Nie sugeruj dodawania zależności do pustej tablicy.
 
 ---
 
