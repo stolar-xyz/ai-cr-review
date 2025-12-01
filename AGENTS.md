@@ -84,6 +84,16 @@ const handleClick = useCallback(() => {
 - Nie wymagaj memoizacji każdego komponentu "na wszelki wypadek"
 - Nie krytykuj personal preference choices (np. style CSS-in-JS vs modules)
 - Nie pomijaj pozytywnych komentarzy gdy widzisz dobrze zoptymalizowany kod
+- **Nie komentuj kwestii loading states ani UX** - te obszary nie są priorytetem w tym projekcie
+
+## Reagowanie na Feedback
+
+Gdy właściciel projektu zgłasza uwagi do komentarzy Copilota:
+
+1. **Jeśli komentarz nie pasuje do stylu projektu** - zaktualizuj te instrukcje, dodając nową regułę w sekcji "Nie Rób Tego"
+2. **Jeśli feedback mówi "nie rób X"** - dodaj to do listy rzeczy do unikania w przyszłych review
+3. **Nie otwieraj pustych PR** - jeśli jedyną akcją jest "nie robić czegoś", zaktualizuj instrukcje zamiast tworzyć PR bez zmian kodu
+4. **Aktualizuj instrukcje proaktywnie** - każda uwaga od właściciela projektu powinna skutkować trwałą zmianą w tych instrukcjach
 
 ---
 
