@@ -1,4 +1,4 @@
-<!-- Copilot Instructions Version: 1.0.0 -->
+<!-- Copilot Instructions Version: 1.0.1 -->
 
 # Instrukcje Code Review dla AI
 
@@ -101,6 +101,7 @@ Jeśli autor PR stwierdzi, że uwaga jest nietrafiona lub coś ma nie być komen
 - Formatowanie/autofix wymuszony przez ESLint/Prettier (`lint-staged` uruchamia oba narzędzia).
 - Używanie `!important` w stylach (dozwolone w tym projekcie, o ile nie psuje a11y/layoutu mobilnego).
 - Brak `useMemo`/`useCallback` (polegamy na `React Compiler` - nie sugeruj ich ręcznego dodawania dla zwykłych handlerów/komponentów).
+- Brak obsługi błędów (error handling) w aplikacjach demo/testowych (np. `thoughts-app`) - uproszczony kod może być celowy dla przejrzystości przykładu.
 
 ## 7. Specyfika Repozytorium
 
