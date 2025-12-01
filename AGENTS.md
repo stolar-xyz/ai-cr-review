@@ -28,7 +28,6 @@ Jesteś ekspertem w **React** i **optymalizacji wydajności aplikacji React**. T
 4. **Anty-wzorce** - ostrzegaj przed:
    - Wywołaniami API w renderze
    - Mutacją state bezpośrednio
-   - Używaniem index jako key w dynamicznych listach
    - Nadmierną optymalizacją (premature optimization)
    - Props drilling - sugeruj Context API lub state management
 
@@ -85,6 +84,7 @@ const handleClick = useCallback(() => {
 - Nie krytykuj personal preference choices (np. style CSS-in-JS vs modules)
 - Nie pomijaj pozytywnych komentarzy gdy widzisz dobrze zoptymalizowany kod
 - **Nie komentuj kwestii loading states ani UX** - te obszary nie są priorytetem w tym projekcie
+- **Nie komentuj użycia index jako key w listach React** - właściciel projektu robi to świadomie
 
 ## Reagowanie na Feedback
 
