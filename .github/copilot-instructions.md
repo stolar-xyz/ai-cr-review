@@ -492,6 +492,69 @@ brak sposobu weryfikacji.
 
 ---
 
+## 🔄 Reagowanie na Feedback
+
+Te instrukcje **ewoluują** na podstawie feedbacku od właścicieli projektu. Gdy dostaniesz
+uwagi do swoich komentarzy, działaj według tego flow:
+
+### 1. **Feedback: "Ten komentarz nie pasuje do stylu projektu"**
+   - Zaktualizuj te instrukcje, dodając konkretną regułę w sekcji "🚫 Przykłady ZŁYCH Komentarzy"
+   - Format: `❌ Zły X: [Tytuł]` + przykład + uzasadnienie "Dlaczego źle"
+   - Przykład: Jeśli dostaniesz feedback "Za dużo technicznego żargonu", dodaj regułę
+     o uproszczeniu języka
+
+### 2. **Feedback: "Nie rób X w przyszłych review"**
+   - Dodaj to do odpowiedniej sekcji w checkliście (🚀 CO SPRAWDZAĆ)
+   - Jeśli dotyczy ogólnego podejścia, dodaj do sekcji "Zasady Prowadzenia CR"
+   - Oznacz jako **"WAŻNE - nie sugeruj X, bo [powód]"**
+   - Przykład: "Nie sugeruj TypeScript w tym projekcie - świadoma decyzja zespołu
+     trzymać się JS"
+
+### 3. **NIE otwieraj pustych PR**
+   - Jeśli jedyna akcja to "nie robić czegoś" = zaktualizuj TYLKO te instrukcje
+   - Nie twórz PR z samymi zmianami w `.github/copilot-instructions.md`
+   - Pusty PR (bez zmian w kodzie produkcyjnym) = marnowanie czasu reviewera
+
+### 4. **Proaktywna aktualizacja instrukcji**
+   - Każda uwaga od właściciela projektu = trwała zmiana w instrukcjach
+   - Dokumentuj pattern: "Zespół preferuje X zamiast Y"
+   - To **uczy** Copilota i redukuje powtarzające się uwagi
+   - Cel: za każdym razem lepsze review, dopasowane do kultury zespołu
+
+### 5. **Meta-feedback: "Zbyt wiele komentarzy o X"**
+   - Zmniejsz priorytet tej kategorii (np. z "high" na "medium")
+   - Lub dodaj threshold: "Sugeruj X tylko gdy problem jest >Y"
+   - Przykład: "Zbyt wiele o a11y" → zmień w instrukcjach na "A11Y tylko blocker issues"
+
+### Przykład aktualizacji instrukcji po feedbacku:
+
+**Feedback otrzymany:**
+> "Przestań sugerować useMemo dla każdej interpolacji stringów - to overhead nie wart zachodu"
+
+**Akcja:**
+1. Znajdź sekcję "1.2 Memoizacja z głową" → dodaj wyjątek:
+```markdown
+**NIE używaj useMemo dla:**
+- Interpolacji stringów (template literals) - koszt > zysk
+- Proste operacje arytmetyczne
+- Płytkie kopie obiektów
+```
+
+2. Dodaj przykład złego komentarza w sekcji "🚫 Przykłady ZŁYCH Komentarzy":
+```markdown
+### ❌ Zły 6: Nadmierna memoizacja stringów
+\`\`\`
+[SEVERITY: medium] [PERF] Użyj useMemo dla filterStyle
+
+const filterStyle = useMemo(() => \`blur(...)\`, [filters]);
+\`\`\`
+**Dlaczego źle:** Template literal jest trywialną operacją. useMemo dodaje overhead
+(alokacja, porównanie deps) większy niż koszt interpolacji. Team explicite zgłosił,
+że nie chce tego typu sugestii.
+```
+
+---
+
 ## 🎬 Podsumowanie
 
 Twoim zadaniem jest **łapać prawdziwe problemy z performance**, nie dodawać
