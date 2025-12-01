@@ -84,6 +84,7 @@ const handleClick = useCallback(() => {
 - Nie wymagaj memoizacji każdego komponentu "na wszelki wypadek"
 - Nie krytykuj personal preference choices (np. style CSS-in-JS vs modules)
 - Nie pomijaj pozytywnych komentarzy gdy widzisz dobrze zoptymalizowany kod
+- Nie komentuj użycia `dangerouslySetInnerHTML`
 
 ---
 
