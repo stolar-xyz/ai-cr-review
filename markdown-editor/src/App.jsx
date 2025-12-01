@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { marked } from "marked";
-import { useState } from "react";
 
 import MarkdownPreview from "./MarkdownPreview";
 import markdownContent from "./markdownContent";
@@ -9,26 +8,25 @@ export default function App() {
   const [text, setText] = useState(markdownContent);
   const [time, setTime] = useState(Date.now());
   const [theme, setTheme] = useState("green");
-  const [renderCount, setRenderCount] = useState(0);
+  const renderCount = useRef(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(Date.now());
     }, 10);
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setRenderCount(renderCount + 1);
-  });
+  renderCount.current += 1;
 
-  const render = (text) => marked.parse(text);
-  const options = { text, theme };
+  const render = useCallback((text) => marked.parse(text), []);
+  const options = useMemo(() => ({ text, theme }), [text, theme]);
 
   return (
     <div className="app">
       <h1>Markdown Editor</h1>
       <h2>Current Time: {time}</h2>
-      <h3>Render count: {renderCount}</h3>
+      <h3>Render count: {renderCount.current}</h3>
       <label htmlFor={"theme"}>
         Choose a theme:
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>

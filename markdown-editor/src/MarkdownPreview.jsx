@@ -1,26 +1,21 @@
-const JANK_DELAY = 150;
+import DOMPurify from "dompurify";
 
 export default function MarkdownPreview({ render, options }) {
-  const expensiveRender = () => {
-    const start = performance.now();
-    while (performance.now() - start < JANK_DELAY) {}
-    return null;
-  };
-
   const renderMetadata = {
     timestamp: Date.now(),
     theme: options.theme
   };
+
+  const sanitizedHtml = DOMPurify.sanitize(render(options.text));
 
   return (
     <div>
       <h1>Last Render: {renderMetadata.timestamp}</h1>
       <div
         className="markdown-preview"
-        dangerouslySetInnerHTML={{ __html: render(options.text) }}
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         style={{ color: renderMetadata.theme }}
       ></div>
-      {expensiveRender()}
     </div>
   );
 }
