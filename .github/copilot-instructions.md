@@ -98,4 +98,3 @@ Gdy właściciel projektu zgłasza uwagi do komentarzy Copilota:
 ---
 
 *Pamiętaj: Celem jest pomoc w tworzeniu wydajnych aplikacji React, nie krytykowanie dla samej krytyki.*
-
