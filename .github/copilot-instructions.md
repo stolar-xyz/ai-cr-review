@@ -1,4 +1,4 @@
-<!-- Copilot Instructions Version: 1.0.0 (Updated: 2025-12-01) -->
+<!-- Copilot Instructions Version: 1.0.0 -->
 
 # Instrukcje Code Review dla AI
 
@@ -10,10 +10,11 @@ Dokument ten definiuje zasady code review dla asystentów AI w tym repozytorium.
 
 - **Język**: Wszystkie komentarze do review **MUSISZ** pisać po **polsku**.
 - **Język techniczny**: Tytuły PR i wiadomości commitów (jeśli proponujesz zmiany) **MUSZĄ** być po **angielsku**.
+- **Format**: Dla standardowych zmian używaj ID z głównego PR (np. `XYZ-2137 - change logic in cart`). Dla aktualizacji instrukcji używaj `NOISSUE - update copilot instructions`.
 - **Styl**: Prosto i konkretnie. Bez lania wody i nadmiernej uprzejmości. Zachowaj profesjonalny, neutralny ton.
 - **Zasada atomowości**: Jeden komentarz dotyczy **tylko jednej sprawy**. Nie łącz wielu wątków w jednym komentarzu.
 - **Kontekst**: Nie zgaduj. Jeśli brakuje kontekstu, zapytaj o niego lub załóż, że jest poprawny, dopóki nie widzisz ewidentnego błędu.
-- **Działania**: Każdy komentarz musi zawierać:
+- **Działania**: Każdy komentarz **MUSI** zawierać:
     1. Blok meta-danych.
     2. Co jest problemem.
     3. Dlaczego to jest problem.
@@ -23,7 +24,7 @@ Dokument ten definiuje zasady code review dla asystentów AI w tym repozytorium.
 
 Każdy komentarz **MUSI** zaczynać się od bloku meta-danych:
 
-`[SEVERITY] [TOPIC] [CONFIDENCE: 1-5]`
+`[SEVERITY] [CONFIDENCE: 1-5] [TOPIC]`
 
 ### Definicje Priorytetów (Severity)
 
@@ -35,18 +36,18 @@ Każdy komentarz **MUSI** zaczynać się od bloku meta-danych:
 | **LOW**     | **Optional**   | Sugestia optymalizacji lub czytelności.                                | Lepsza nazwa zmiennej, uproszczenie `if/else`, użycie nowszej składni JS/TS.                                                         |
 | **NIT**     | **Optional**   | Drobiazgi (nie blokujące).                                             | Literówka w komentarzu, zbędna pusta linia (jeśli linter przepuścił).                                                                |
 
-### Tematy (Topics)
-
-`bug`, `security`, `perf`, `maintainability`, `tests`, `style`, `a11y`, `types`
-
-> **Uwaga do `style`**: Używaj tego tagu tylko dla czytelności, spójności API lub architektury. **Nie używaj** dla formatowania (wcięcia, spacje), które obsługuje Prettier.
-
 ### Pewność (Confidence)
 
 Skala **1-5**:
 
 - **1**: Domysł (zaznacz to wyraźnie w treści komentarza lub zadaj pytanie).
 - **5**: Pełna pewność po analizie (jesteś pewien na 100%, widzisz błąd i znasz rozwiązanie).
+
+### Tematy (Topics)
+
+`bug`, `security`, `perf`, `maintainability`, `tests`, `style`, `a11y`, `types`
+
+> **Uwaga do `style`**: Używaj tego tagu tylko dla czytelności, spójności API lub architektury. **Nie używaj** dla formatowania (wcięcia, spacje), które obsługuje Prettier.
 
 ## 4. Kluczowe Obszary
 
@@ -73,22 +74,22 @@ Podczas review priorytetyzuj następujące aspekty:
   - **Deduplikacja**: Sprawdzaj, czy ten sam endpoint nie jest wołany wielokrotnie w tym samym czasie (React Query robi to automatycznie, o ile klucze są te same).
 - **Renderowanie**: Wykrywaj zbędne re-rendery w kluczowych widokach.
 - **Waterfall Requests**: Unikaj zapytań API wewnątrz pętli renderowania (odpowiednik N+1 w backendzie). Pobieraj dane zbiorczo wyżej.
-- **JS/React**: Unikaj tworzenia nowych obiektów/funkcji wewnątrz pętli lub renderu **tylko w krytycznych ścieżkach (hot paths)** lub przy przekazywaniu do bardzo ciężkich komponentów. W standardowym kodzie polegaj na React Compiler.
+- **JS/React**: Unikaj tworzenia nowych obiektów/funkcji wewnątrz pętli, renderu lub przy przekazywaniu do bardzo ciężkich komponentów. W standardowym kodzie polegaj na React Compiler.
 - **Bundle Size**: Wykrywaj importowanie całych bibliotek (np. lodash) zamiast konkretnych funkcji. Zwracaj uwagę na "Barrel files" (index.ts), które mogą psuć tree-shaking w Webpacku.
 
 ### Bezpieczeństwo i Stabilność
 
 - **Inputy**: Każde dane od użytkownika (URL params, form inputs) muszą być walidowane.
 - **Error Handling**: Nowe funkcjonalności muszą mieć obsługę błędów (np. `try/catch` w asynchronicznych akcjach, Error Boundaries w UI).
-- **Testing**: Każda nowa logika biznesowa (w hookach/utilsach) **musi** posiadać testy jednostkowe.
+- **Testing**: Każda nowa logika biznesowa (w hookach/utilsach) **MUSI** posiadać testy jednostkowe.
 
 ## 5. Procedura Feedbacku
 
 Jeśli autor PR stwierdzi, że uwaga jest nietrafiona lub coś ma nie być komentowane:
 
 1. **ZAKTUALIZUJ** sekcję “Czego nie komentować” w pliku `.github/copilot-instructions.md` opisując wątek.
-2. **PODBIJ WERSJĘ** w nagłówku pliku (np. z `1.0.0` na `1.0.1`) i zaktualizuj datę na dzisiejszą.
-3. **ZRÓB** osobny commit z angielskim message `NOISSUE - update copilot instructions` oraz otwórz PR z angielskim tytułem `NOISSUE - update Copilot instructions after feedback`.
+2. **PODBIJ WERSJĘ** w nagłówku pliku (np. z `1.0.0` na `1.0.1`).
+3. **ZRÓB** osobny commit z angielskim message `NOISSUE - update copilot instructions` oraz otwórz PR z angielskim tytułem `NOISSUE - update copilot instructions after feedback`.
 4. W opisie PR krótko **WYJAŚNIJ** jaki feedback spowodował zmianę.
 
 ## 6. Czego nie komentować
@@ -109,7 +110,7 @@ Jeśli autor PR stwierdzi, że uwaga jest nietrafiona lub coś ma nie być komen
 - **State**:
   - Server state: `React Query` (@tanstack/react-query).
   - Client state: `Redux` / `RxJS` (istniejący kod), nowe funkcjonalności preferują React Query lub Context.
-- **Styling**: SCSS / CSS Modules. Aplikacja Multi-theme
+- **Styling**: SCSS / CSS Modules. Aplikacja Multi-theme.
 - **Testing**: Jest + React Testing Library.
 
 ### Kluczowe Zasady Architektoniczne
