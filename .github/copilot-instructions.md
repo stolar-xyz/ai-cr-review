@@ -1,4 +1,4 @@
-<!-- Copilot Instructions Version: 1.0.0 (Updated: 2025-12-01) -->
+<!-- Copilot Instructions Version: 1.0.1 (Updated: 2025-12-01) -->
 
 # Instrukcje Code Review dla AI
 
@@ -100,6 +100,7 @@ Jeśli autor PR stwierdzi, że uwaga jest nietrafiona lub coś ma nie być komen
 - Formatowanie/autofix wymuszony przez ESLint/Prettier (`lint-staged` uruchamia oba narzędzia).
 - Używanie `!important` w stylach (dozwolone w tym projekcie, o ile nie psuje a11y/layoutu mobilnego).
 - Brak `useMemo`/`useCallback` (polegamy na `React Compiler` - nie sugeruj ich ręcznego dodawania dla zwykłych handlerów/komponentów).
+- Pusta tablica zależności w `useEffect` (`[]`) lub jej brak - jest to celowe rozwiązanie w tym projekcie i nie należy tego komentować.
 
 ## 7. Specyfika Repozytorium
 
